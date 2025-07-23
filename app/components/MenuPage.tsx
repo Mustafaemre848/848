@@ -61,6 +61,7 @@ export default function MenuPage() {
   const [showCart, setShowCart] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{id: string, quantity: number} | null>(null)
   const [tableNumber, setTableNumber] = useState('')
+  const [orderRequest, setOrderRequest] = useState('')
 
   useEffect(() => {
     if (companyId) {
@@ -172,6 +173,7 @@ export default function MenuPage() {
     setCart([])
     setShowCart(false)
     setTableNumber('')
+    setOrderRequest('')
   }
 
   if (loading) {
@@ -420,6 +422,21 @@ export default function MenuPage() {
                 />
               </div>
 
+              {/* Order Request/Notes Input */}
+              <div className="mb-4">
+                <label htmlFor="orderRequest" className="block text-sm font-medium text-gray-700 mb-2">
+                  Special Requests or Notes
+                </label>
+                <textarea
+                  id="orderRequest"
+                  value={orderRequest}
+                  onChange={(e) => setOrderRequest(e.target.value)}
+                  placeholder="Any special requests, allergies, or additional notes..."
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                />
+              </div>
+
               {cart.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-4">🛒</div>
@@ -476,7 +493,8 @@ export default function MenuPage() {
                         alert('Please enter your table number before confirming the order.')
                         return
                       }
-                      alert(`Order confirmed!\nTable: ${tableNumber}\nTotal: ₺${getTotalPrice().toFixed(2)}\nItems: ${getTotalItems()}`)
+                      const orderDetails = `Order confirmed!\nTable: ${tableNumber}\nTotal: ₺${getTotalPrice().toFixed(2)}\nItems: ${getTotalItems()}${orderRequest.trim() ? `\nSpecial Requests: ${orderRequest}` : ''}`
+                      alert(orderDetails)
                       clearCart()
                     }}
                     disabled={!tableNumber.trim()}
