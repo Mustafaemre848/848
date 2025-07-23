@@ -388,7 +388,7 @@ export default function MenuPage() {
 
       {/* Shopping Cart Modal */}
       {showCart && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-transparent z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden">
             <div className="p-4 border-b flex items-center justify-between">
               <h2 className="text-xl font-bold">Shopping Cart</h2>
@@ -808,9 +808,13 @@ function ManualMenu({
   const currentCategory = getCurrentCategory()
 
   const handleQuantityChange = (itemId: string, change: number) => {
-    const currentQuantity = selectedItem?.id === itemId ? selectedItem.quantity : 1
-    const newQuantity = Math.max(1, currentQuantity + change)
-    setSelectedItem({ id: itemId, quantity: newQuantity })
+    const currentQuantity = selectedItem?.id === itemId ? selectedItem.quantity : 0
+    const newQuantity = Math.max(0, currentQuantity + change)
+    if (newQuantity === 0) {
+      setSelectedItem(null)
+    } else {
+      setSelectedItem({ id: itemId, quantity: newQuantity })
+    }
   }
 
   const handleAddToCart = (item: any) => {
@@ -932,7 +936,7 @@ function ManualMenu({
                             -
                           </button>
                           <span className="w-8 text-center font-bold">
-                            {selectedItem?.id === item.id ? selectedItem.quantity : 1}
+                            {selectedItem?.id === item.id ? selectedItem.quantity : 0}
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.id, 1)}
@@ -944,7 +948,7 @@ function ManualMenu({
                       )}
 
                       {/* Action Buttons */}
-                      {selectedItem?.id === item.id && item.price && (
+                      {selectedItem?.id === item.id && selectedItem.quantity > 0 && item.price && (
                         <div className="flex space-x-2 mt-3 transition-all duration-300 ease-in-out opacity-100">
                           <button
                             onClick={handleCancelSelection}
