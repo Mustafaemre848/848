@@ -60,6 +60,7 @@ export default function MenuPage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [showCart, setShowCart] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{id: string, quantity: number} | null>(null)
+  const [tableNumber, setTableNumber] = useState('')
 
   useEffect(() => {
     if (companyId) {
@@ -170,6 +171,7 @@ export default function MenuPage() {
   const clearCart = () => {
     setCart([])
     setShowCart(false)
+    setTableNumber('')
   }
 
   if (loading) {
@@ -403,6 +405,21 @@ export default function MenuPage() {
             </div>
             
             <div className="p-4 max-h-96 overflow-y-auto">
+              {/* Table Number Input */}
+              <div className="mb-4">
+                <label htmlFor="tableNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                  Table Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="tableNumber"
+                  value={tableNumber}
+                  onChange={(e) => setTableNumber(e.target.value)}
+                  placeholder="Enter your table number"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
               {cart.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-4">🛒</div>
@@ -455,10 +472,19 @@ export default function MenuPage() {
                   </button>
                   <button
                     onClick={() => {
-                      alert(`Order confirmed!\nTotal: ₺${getTotalPrice().toFixed(2)}\nItems: ${getTotalItems()}`)
+                      if (!tableNumber.trim()) {
+                        alert('Please enter your table number before confirming the order.')
+                        return
+                      }
+                      alert(`Order confirmed!\nTable: ${tableNumber}\nTotal: ₺${getTotalPrice().toFixed(2)}\nItems: ${getTotalItems()}`)
                       clearCart()
                     }}
-                    className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors"
+                    disabled={!tableNumber.trim()}
+                    className={`flex-1 py-2 rounded-lg transition-colors ${
+                      tableNumber.trim() 
+                        ? 'bg-green-500 text-white hover:bg-green-600' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
                   >
                     Confirm Order
                   </button>
