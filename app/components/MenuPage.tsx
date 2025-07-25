@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import HTMLFlipBook from 'react-pageflip';
+import OrdersPage from './OrdersPage';
 
 interface Company {
   id: string
