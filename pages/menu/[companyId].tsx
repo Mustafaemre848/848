@@ -957,16 +957,17 @@ function ManualMenu({
             {[...currentCategory.subCategories]
               .sort((a, b) => a.orderNo - b.orderNo)
               .map((item) => {
-                const isSelected = selectedItem?.id === item.id && selectedItem?.quantity > 0
-                return (
-                  <div
-                    key={item.id}
-                    className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group relative ${
-                      isSelected 
-                        ? 'ring-2 ring-blue-500 scale-105 z-20 hover:-translate-y-1' 
-                        : 'hover:-translate-y-1'
-                    }`}
-                  >
+                                 const isSelected = selectedItem?.id === item.id && selectedItem?.quantity > 0
+                 const hasActionButtons = isSelected && item.price && item.stock
+                 return (
+                   <div
+                     key={item.id}
+                     className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group relative ${
+                       hasActionButtons 
+                         ? 'ring-2 ring-blue-500 scale-105 z-20' 
+                         : ''
+                     } hover:-translate-y-1`}
+                   >
                     {/* Product Image */}
                     <div className="aspect-square w-full bg-gray-100 overflow-hidden">
                       {item.menuImageUrl ? (
@@ -1032,14 +1033,14 @@ function ManualMenu({
                         </div>
                       )}
 
-                      {/* Action Buttons - Only appear for selected item */}
-                      {isSelected && item.price && (
-                        <div 
-                          className="flex space-x-2 mt-3 opacity-0"
-                          style={{ 
-                            animation: 'fadeInUp 0.3s ease-out forwards',
-                          }}
-                        >
+                                             {/* Action Buttons - Only appear for selected item */}
+                       {hasActionButtons && (
+                         <div 
+                           className="flex space-x-2 mt-3 opacity-0"
+                           style={{ 
+                             animation: 'fadeInUp 0.3s ease-out forwards',
+                           }}
+                         >
                           <button
                             onClick={handleCancelSelection}
                             className="flex-1 bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
